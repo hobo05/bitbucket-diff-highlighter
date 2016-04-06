@@ -9,7 +9,7 @@
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
-// @resource     sourceCodeProFont https://fonts.googleapis.com/css?family=Source+Code+Pro=;
+// @resource     sourceCodeProFont https://fonts.googleapis.com/css?family=Source+Code+Pro=
 // ==/UserScript==
 
 (function() {
@@ -47,10 +47,10 @@ pre.theme-stark .com {\
 color: #615953;\
 }\
 pre.theme-stark .typ {\
-color: #F03113;\
+color: #62A741;\
 }\
 pre.theme-stark .lit {\
-color: #F03113;\
+color: #F98A37;\
 }\
 pre.theme-stark .pun,\
 pre.theme-stark .opn,\
@@ -75,7 +75,63 @@ color: #FFBB29;\
 }\
 ";
 
+    var solarizedDark = "\
+.prettyprint code {\
+color: #839496;\
+background-color: #002b36;\
+background: #002b36;\
+border: none; /* remove the border */\
+font-family: 'Source Code Pro', Monaco, Consolas, 'Lucida Console', monospace;\
+}\
+\
+.prettyprint .pln {\
+color: inherit;\
+}\
+\
+.prettyprint .str,\
+.prettyprint .lit,\
+.prettyprint .atv {\
+color: #2aa198;\
+}\
+\
+.prettyprint .kwd {\
+color: #268bd2;\
+}\
+\
+.prettyprint .com,\
+.prettyprint .dec {\
+color: #586e75;\
+font-style: italic;\
+}\
+\
+.prettyprint .typ {\
+color: #b58900;\
+}\
+\
+.prettyprint .pun {\
+color: inherit;\
+}\
+\
+.prettyprint .opn {\
+color: inherit;\
+}\
+\
+.prettyprint .clo {\
+color: inherit;\
+}\
+\
+.prettyprint .tag {\
+color: #268bd2;\
+font-weight: bold;\
+}\
+\
+.prettyprint .atn {\
+color: inherit;\
+}\
+";
+
     GM_addStyle(themeStarkCss);
+//    GM_addStyle(solarizedDark);
 
     GM_log('Wait for source code diffs to load...');
     waitForKeyElements('.refract-content-container', function actionFunction (container) {
@@ -104,6 +160,9 @@ color: #FFBB29;\
         //        GM_log(finalSourceCode);
 
         //$(container).empty();
-        $(container).append($("<pre>", {class:"prettyprint lang-java theme-stark"}).append($("<code>", {text:finalSourceCode})));
+        $(container).append($("<pre>", {class:"prettyprint theme-stark"}).append($("<code>", {text:finalSourceCode})));
+
+        // call pretty print in case it didn't run
+        PR.prettyPrint();
     });
 })();
