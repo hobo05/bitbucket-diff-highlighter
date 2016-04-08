@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Bitbucket Diff Highlighter
 // @namespace    http://chengsoft.com/
-// @version      0.1
+// @version      0.2
 // @description  Highlight Bitbucket pull-requests
 // @author       Tim Cheng <tim.cheng09@gmail.com>
 // @match        https://bitbucket.org/*/diff
+// @match        https://bitbucket.org/*/commits/*
 // @grant        GM_log
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
@@ -14,11 +15,6 @@
 
 (function() {
     'use strict';
-
-    GM_addStyle(GM_getResourceText("sourceCodeProFont"));
-
-    $.getScript('https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js');
-    GM_log('Got prettify');
 
     /*jshint multistr: true */
 
@@ -130,39 +126,43 @@ color: inherit;\
 }\
 ";
 
+    GM_addStyle(GM_getResourceText("sourceCodeProFont"));
     GM_addStyle(themeStarkCss);
-//    GM_addStyle(solarizedDark);
+    //    GM_addStyle(solarizedDark);
 
-    GM_log('Wait for source code diffs to load...');
-    waitForKeyElements('.refract-content-container', function actionFunction (container) {
-        GM_log('Found diff to act on');
-        GM_log($(container));
+    $.getScript('https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js', function( data, textStatus, jqxhr ) {
+        GM_log('Got prettify');
+        GM_log('Wait for source code diffs to load...');
+        waitForKeyElements('.refract-content-container', function actionFunction (container) {
+            GM_log('Found diff to act on');
+            GM_log($(container));
 
-        var sourceCode = "";
-        var finalSourceCode = "";
-        $(container).find(".source").each(function(index, value) {
-            var line = $(value).text();
-            sourceCode = sourceCode += "\n" + line;
+            var sourceCode = "";
+            var finalSourceCode = "";
+            $(container).find(".source").each(function(index, value) {
+                var line = $(value).text();
+                sourceCode = sourceCode += "\n" + line;
 
-            // If the line does not start with a "-"
-            if (!/^-.*/.test(line)) {
-                // replace the "+" if it exists
-                if (/^\+.*/.test(line)) {
-                    GM_log('before: ' + line);
-                    line = line.replace("+", " ");
-                    GM_log('after: ' + line);
+                // If the line does not start with a "-"
+                if (!/^-.*/.test(line)) {
+                    // replace the "+" if it exists
+                    if (/^\+.*/.test(line)) {
+                        GM_log('before: ' + line);
+                        line = line.replace("+", " ");
+                        GM_log('after: ' + line);
+                    }
+                    finalSourceCode = finalSourceCode += "\n" + line;
                 }
-                finalSourceCode = finalSourceCode += "\n" + line;
-            }
+            });
+
+            //        GM_log(sourceCode);
+            //        GM_log(finalSourceCode);
+
+            //$(container).empty();
+            $(container).append($("<pre>", {class:"prettyprint theme-stark"}).append($("<code>", {text:finalSourceCode})));
+
+            // call pretty print in case it didn't run
+            PR.prettyPrint();
         });
-
-        //        GM_log(sourceCode);
-        //        GM_log(finalSourceCode);
-
-        //$(container).empty();
-        $(container).append($("<pre>", {class:"prettyprint theme-stark"}).append($("<code>", {text:finalSourceCode})));
-
-        // call pretty print in case it didn't run
-        PR.prettyPrint();
     });
 })();
