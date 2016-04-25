@@ -9,7 +9,7 @@
 // @grant        GM_log
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
-// @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
+// @require      https://greasyfork.org/scripts/5392-waitforkeyelements/code/WaitForKeyElements.js?version=115012
 // @resource     sourceCodeProFont https://fonts.googleapis.com/css?family=Source+Code+Pro=
 // ==/UserScript==
 
