@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bitbucket Diff Highlighter
 // @namespace    http://chengsoft.com/
-// @version      0.2
+// @version      0.3
 // @description  Highlight Bitbucket pull-requests
 // @author       Tim Cheng <tim.cheng09@gmail.com>
 // @match        https://bitbucket.org/*/diff
